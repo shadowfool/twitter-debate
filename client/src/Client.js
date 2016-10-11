@@ -1,3 +1,4 @@
+
 function search(query) {
   return fetch(`/api/test`, {
     accept: 'application/json',

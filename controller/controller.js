@@ -1,10 +1,10 @@
-// const userDataGenerator = require('../generators/userGenerator').userDataGenerator;
-// const generateXActivitiesForUser = require('../generators/activityGenerator').generateXActivitiesForUser;
+const twitterAPI = require('../utility/twitter.js');
 
 module.exports = {
 
   exampleFunction: (req, res) => {
-    res.end('hello world');
+    console.log(twitterAPI.someFunction)
+    res.end(twitterAPI.streamFunction());
   },
 
   exampleFunctionTwo: (req, res) => {
