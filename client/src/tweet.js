@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 class Tweet extends Component {
   render() {
     return (
@@ -7,5 +6,4 @@ class Tweet extends Component {
     );
   }
 }
-
 export default Tweet;

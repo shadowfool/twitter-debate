@@ -4,6 +4,11 @@ const path = require('path');
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const _ = require('lodash');
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost:27017/twitter_markov');
+
+
 
 require('./routes/api-routes.js')(app);
 
@@ -17,22 +22,24 @@ const config = {
       "access_token_key": process.env.access_token,
       "access_token_secret": process.env.access_token_secret,
 }
-const twitter = new Twitter(config);
+// const twitter = new Twitter(config);
 
 
 server.listen(4000, () => {
   console.log('listening on port 4000');
 });
 
-io.on('connection', function (socket) {
-  const stream = twitter.stream('statuses/filter', {track: 'Javascript'});
-  const notRT = /(RT)\b/;
-  stream.on('data', function(event) {
-      // if(!event.text.match(notRT))
-        socket.emit('tweet', { event: event, text: event.text });
-      console.log(event && event.text);
-  });
-  stream.on('error', function(error) {
-      console.error(error)
-  });
-});
+
+
+// io.on('connection', function (socket) {
+//   const stream = twitter.stream('statuses/filter', {track: 'Javascript'});
+//   const notRT = /(RT)\b/;
+//   stream.on('data', function(event) {
+//       // if(!event.text.match(notRT))
+//         socket.emit('tweet', { event: event, text: event.text });
+//       console.log(event && event.text);
+//   });
+//   stream.on('error', function(error) {
+//       console.error(error)
+//   });
+// });

@@ -1,2 +1,2 @@
-web: cd client && npm start
+mongo: mongod
 api: npm run dev
