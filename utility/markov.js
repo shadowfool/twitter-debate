@@ -19,40 +19,61 @@ module.exports = {
     this.splitText = function(inputText){
       return inputText.split(/\s+/);
     };
-    this.readText = function(inputText){
+    this.readWords = function(inputText){
       let n = this.n
       let words = this.splitText(inputText);
-      let dictionary = {};
-      for(let i = 0; i < words.length - n; i++){
-        if(!dictionary[words.slice(i, i + n).join(' ')]){
-          dictionary[words.slice(i, i + n).join(' ')] = {};
+      let wordCollection = {};
+        for(let i = 0; i < words.length - n; i++){
+          let word = words.slice(i, i + n).join(' ');
+          let nextWord = words.slice(i + n, i + n + 1).join(' ');
+          if(!wordCollection[word]){
+            wordCollection[word] = {};
+          }
+          if(!wordCollection[word][nextWord]){
+            wordCollection[word][nextWord] = 0;
+          }
+          wordCollection[word][nextWord] = wordCollection[word][nextWord] + 1;
         }
-        if(!dictionary[words.slice(i, i + n).join(' ')][words[i + n]]){
-          dictionary[words.slice(i, i + n).join(' ')][words[i + n]] = 0;
-        }
-        dictionary[words.slice(i, i + n).join(' ')][words[i + n]] = dictionary[words.slice(i, i + n).join(' ')][words[i + n]] + 1;
-      }``
-     return dictionary;
+     return wordCollection;
     };
 
-    this.dictionary = this.readText(inputText);
+    this.sentanceParse = function(imputText){
+
+    }
+
+    this.dictionary = {};
+    this.dictionary.words = this.readWords(inputText);
 
     this.generateTweet = function(length){
       length = length || 120;
-      let words = Object.keys(this.dictionary),
-      firstWord = words[Math.floor(Math.random()* words.length)],
+
+      let words = Object.keys(this.dictionary.words),
+      firstWord = words[Math.floor(Math.random()* words.length)];
+      
       tweet = [];
       tweet.push(firstWord);
+
       length = length - firstWord.length;
       while(length >= 0){
-        let lastWord = this.dictionary[tweet[tweet.length - 1]];
-        let nextWord = this.chooseNextWord(lastWord);
-        if(length - nextWord < 0){
+        let lastWords = this.dictionary.words[tweet[tweet.length - 1]];
+        let nextWords = this.chooseNextWord(lastWords);
+        if(length - nextWords < 0){
           break;
         }
-        else{
-         tweet.push(nextWord);
-         length = length - nextWord.length;
+        if(this.n === 1){
+          tweet.push(nextWords)
+          length = length - nextWords.length;
+        }
+        else {
+          let oldChain = tweet[tweet.length - 1].split(' ').slice(-(this.n - 1));
+          let modifiedLast = tweet[tweet.length - 1].split(' ')
+          modifiedLast.splice(-(this.n - 1));
+          tweet[tweet.length - 1] = modifiedLast;
+          oldChain.push(nextWords)
+          oldChain = oldChain.join(' ');
+          tweet.push(oldChain)
+          length = length - nextWords.length;
+
         }
       }
       return tweet.join(' ');
@@ -65,7 +86,6 @@ module.exports = {
   }
 };
 
-let test = new module.exports.MarkovTweets(dw, 1)
+let test = new module.exports.MarkovTweets(poetryMash, 2)
+console.log(test.dictionary.words)
 console.log(test.generateTweet(500));
-
-// TODO VARIENTS OF A SPECIFIC  WORD. with a period? with a comma?
